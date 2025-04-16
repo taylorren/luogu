@@ -9,7 +9,7 @@
       "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "/home/tr/program/luogu",
-      "program": "/home/tr/program/luogu/a.out",
+      "program": "/home/tr/program/luogu/b-tree/a.out",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
