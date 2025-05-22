@@ -1,20 +1,20 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-// 计算 Catalan 数的递归函数
-long long catalan(int n) {
-  if (n == 0 || n == 1)
-    return 1; // 基础情况
-  long long result = 0;
-  for (int i = 1; i <= n; ++i) {
-    result += catalan(i - 1) * catalan(n - i);
-  }
-  return result;
-}
+int main()
+{
+    int n, h[20]={1, 1};
 
-int main() {
-  int n;
-  cin >> n;                   // 输入 n
-  cout << catalan(n) << endl; // 输出 Catalan 数
-  return 0;
+    cin>>n;
+
+    for(int i=2;i<=n;i++)
+    {
+        for(int j=0;j<i;j++)
+        {
+            h[i]+=h[j]*h[i-j-1];
+        }
+    }
+
+    cout<<h[n]<<endl;
+    return 0;
 }
