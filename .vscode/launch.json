@@ -3,22 +3,10 @@
   "configurations": [
     {
       "name": "C/C++ Runner: Debug Session",
-      "type": "cppdbg",
       "request": "launch",
       "args": [],
-      "stopAtEntry": false,
-      "externalConsole": false,
       "cwd": "/home/tr/program/luogu_book_1",
-      "program": "/home/tr/program/luogu_book_1/12.greedy/a.out",
-      "MIMode": "gdb",
-      "miDebuggerPath": "gdb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ]
+      "program": "/home/tr/program/luogu_book_1/05.array/a.out",
     }
   ]
 }
