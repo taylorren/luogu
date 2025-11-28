@@ -1,18 +1,17 @@
-#include <iostream>
-#include <string>
+#include <bits/stdc++.h>
 using namespace std;
 
-// 计算字符串中VK的数量
-int countVK(const string& s)
+int countVK(string s, int len)
 {
     int count = 0;
-    for (int i = 0; i < s.length() - 1; i++)
+    for (int i = 0; i < len - 1; i++)
     {
         if (s[i] == 'V' && s[i + 1] == 'K')
         {
             count++;
         }
     }
+
     return count;
 }
 
@@ -21,18 +20,18 @@ int main()
     int n;
     string s;
     cin >> n >> s;
-
-    int maxCount = countVK(s);  // 原始字符串中VK的数量
-
-    // 尝试修改每个位置
+    int count = countVK(s, n);
     for (int i = 0; i < n; i++)
     {
-        string temp = s;
-        // 尝试改成另一个字符
-        temp[i] = (temp[i] == 'V' ? 'K' : 'V');
-        maxCount = max(maxCount, countVK(temp));
+        string temp_s=s;
+        s[i] == 'V' ? temp_s[i] = 'K' : temp_s[i]='V';
+        
+        int temp = countVK(temp_s, n);
+        if (temp > count)
+        {
+            count = temp;
+        }
     }
 
-    cout << maxCount << endl;
-    return 0;
+    cout << count;
 }

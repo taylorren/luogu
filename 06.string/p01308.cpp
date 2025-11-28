@@ -7,8 +7,8 @@ int main()
     cin >> c;
     getchar();
     getline(cin, s);
-    c = ' ' + c + ' ';
-    s = ' ' + s + ' ';
+    c = " " + c + " ";
+    s = " " + s + " ";
     for (int i = 0; c[i]; i++)
     {
         c[i] = toupper(c[i]);

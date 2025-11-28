@@ -1,26 +1,28 @@
 #include <bits/stdc++.h>
+
+#include <algorithm>
 using namespace std;
 
-// 反转整数字符串，去掉前导零
-string reverseNum(string s, bool isDecimal = false) {
-    if(s == "0") return s;
-    
-    long long num = 0;
-    // 从右向左处理每一位
-    for(int i = s.length() - 1; i >= 0; i--) {
-        if(s[i] != '0' || num != 0) {  // 避免前导0
-            num = num * 10 + (s[i] - '0');
-        }
+// Remove leading zeros from string
+string removeLeadingZeros(string s)
+{
+    int pos = s.find_first_not_of("0");
+    if (pos == string::npos)
+    {
+        return "0";
     }
-    
-    string result = to_string(num);
-    // 如果是小数部分，需要去掉末尾的0
-    if(isDecimal && result != "0") {
-        while(result.back() == '0') {
-            result.pop_back();
-        }
+    return s.substr(pos);
+}
+
+// Remove trailing zeros from string
+string removeTrailingZeros(string s)
+{
+    int pos = s.find_last_not_of("0");
+    if (pos == string::npos)
+    {
+        return "0";
     }
-    return result;
+    return s.substr(0, pos + 1);
 }
 
 int main()
@@ -28,30 +30,44 @@ int main()
     string s;
     cin >> s;
 
-    if (s.find('/') != string::npos) {
-        int pos = s.find('/');
-        string num = s.substr(0, pos);
-        string den = s.substr(pos + 1);
-        cout << reverseNum(num) << "/" << reverseNum(den);
-    }
-    else if (s.find('.') != string::npos) {
-        int pos = s.find('.');
-        string intPart = s.substr(0, pos);
-        string decPart = s.substr(pos + 1);
-        // 小数部分特殊处理：传入isDecimal=true
-        string revDec = reverseNum(decPart, true);
-        if (revDec == "") revDec = "0";
-        cout << reverseNum(intPart) << "." << revDec;
-    }
-    else if (s.find('%') != string::npos)
-    {                  // 百分数
-        s.pop_back();  // 去掉%
-        cout << reverseNum(s) << "%";
-    }
-    else
-    {  // 整数
-        cout << reverseNum(s);
-    }
+    // 处理小数
+    if (s.find(".") != string::npos)
+    {
+        int pos = s.find(".");
+        string whole = s.substr(0, pos);
+        string decimal = s.substr(pos + 1, s.size());
+        reverse(whole.begin(), whole.end());
+        reverse(decimal.begin(), decimal.end());
 
-    return 0;
+        whole = removeLeadingZeros(whole);
+        decimal = removeTrailingZeros(decimal);
+
+        cout << whole << "." << decimal << endl;
+    }
+    else if (s.find("%") != string::npos)  // 百分数
+    {
+        s = s.substr(0, s.size() - 1);
+        reverse(s.begin(), s.end());
+        s = removeLeadingZeros(s);
+        cout << s << "%" << endl;
+    }
+    else if (s.find("/") != string::npos)  // 分数
+    {
+        int pos = s.find("/");
+        string numerator = s.substr(0, pos);
+        string denominator = s.substr(pos + 1, s.size());
+        reverse(numerator.begin(), numerator.end());
+        reverse(denominator.begin(), denominator.end());
+
+        numerator = removeLeadingZeros(numerator);
+        denominator = removeLeadingZeros(denominator);
+
+        cout << numerator << "/" << denominator << endl;
+    }
+    else  // regular number
+    {
+        reverse(s.begin(), s.end());
+        s = removeLeadingZeros(s);
+        cout << s << endl;
+    }
 }

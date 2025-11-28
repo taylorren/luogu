@@ -3,10 +3,11 @@
   "configurations": [
     {
       "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
       "request": "launch",
       "args": [],
       "cwd": "/home/tr/program/luogu_book_1",
-      "program": "/home/tr/program/luogu_book_1/05.array/a.out",
+      "program": "/home/tr/program/luogu_book_1/06.string/a.out"
     }
   ]
 }
