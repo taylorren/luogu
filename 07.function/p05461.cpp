@@ -1,50 +1,37 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-int matrix[1024][1024];
+const int N = 1024+10;
+int prisoners[N][N];
 
 void solve(int x, int y, int size)
 {
-    if (size == 1)
+    if(size==1)
     {
-        matrix[x][y] = 1;  // 到达最小单位，标记为不赦免
+        prisoners[x][y]=1;
         return;
     }
 
-    int new_size = size / 2;
-    solve(x, y + new_size, new_size);             // 右上
-    solve(x + new_size, y, new_size);             // 左下
-    solve(x + new_size, y + new_size, new_size);  // 右下
+    size=size/2;
+    solve(x, y+size, size);
+    solve(x+size, y, size);
+    solve(x+size, y+size, size);
 }
 
 int main()
 {
     int n;
-    cin >> n;
-    int size = 1 << n;
-
-    // 初始化矩阵，全部设为0（赦免）
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size; j++)
-        {
-            matrix[i][j] = 0;
-        }
-    }
+    cin>>n;
+    int size=pow(2, n);
 
     solve(0, 0, size);
 
-    // 输出结果
-    for (int i = 0; i < size; i++)
+    for(int i=0; i<size; i++)
     {
-        for (int j = 0; j < size; j++)
+        for(int j=0; j<size; j++)
         {
-            cout << matrix[i][j];
-            if (j < size - 1)
-                cout << " ";
+            cout<<prisoners[i][j]<<" ";
         }
-        cout << endl;
+        cout<<endl;
     }
-
-    return 0;
 }

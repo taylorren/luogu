@@ -14,7 +14,7 @@ struct Student
 };
 
 const int SCORE = 140;
-const int FINAL = 800;
+const int FINAL = 80;
 
 bool isExcellent(Student s)
 {
@@ -29,7 +29,7 @@ int main()
     for (int i = 0; i < n; i++)
     {
         cin >> s.id >> s.sc1 >> s.sc2;
-        s.final_score = s.sc1 * 7 + s.sc2 * 3;  // 计算综合分数
+        s.final_score = s.sc1 * 0.7 + s.sc2 * 0.3;  // 计算综合分数
 
         if (isExcellent(s))
         {
