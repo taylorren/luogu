@@ -23,28 +23,15 @@ int main()
         if (coeff == 0)
             continue;  // 跳过系数为0的项
 
-        // 处理符号
-        if (result.empty())
+        // 统一添加符号
+        if (coeff > 0)
         {
-            // 如果是第一个非零项，直接添加
-            if (coeff < 0)
-            {
-                result += "-";
-                coeff = -coeff;  // 取绝对值
-            }
+            result += "+";
         }
         else
         {
-            // 不是第一个项，添加符号
-            if (coeff > 0)
-            {
-                result += "+";
-            }
-            else
-            {
-                result += "-";
-                coeff = -coeff;  // 取绝对值
-            }
+            result += "-";
+            coeff = -coeff;  // 取绝对值
         }
 
         // 添加系数
@@ -74,6 +61,12 @@ int main()
                 result += to_string(coeff) + "x^" + to_string(power);  // 高次项
             }
         }
+    }
+
+    // 去掉开头的 + 号
+    if (result[0] == '+')
+    {
+        result = result.substr(1);
     }
 
     cout << result << endl;  // 输出结果

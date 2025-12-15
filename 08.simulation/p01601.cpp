@@ -7,8 +7,6 @@ class HighPrecision
     friend ostream& operator<<(ostream& os, const HighPrecision& hp);
     friend HighPrecision operator+(const HighPrecision& hp1,
                                    const HighPrecision& hp2);
-    friend HighPrecision operator*(const HighPrecision& hp1,
-                                   const HighPrecision& hp2);
 
    private:
     vector<int> num;
@@ -19,10 +17,6 @@ class HighPrecision
     {
         for (int i = s.size() - 1; i >= 0; i--)
             num.push_back(s[i] - '0');
-    }
-    vector<int> getNum() const
-    {
-        return num;
     }
 };
 
@@ -87,57 +81,10 @@ HighPrecision operator+(const HighPrecision& hp1, const HighPrecision& hp2)
     return hp;
 }
 
-HighPrecision operator*(const HighPrecision& hp1, const HighPrecision& hp2)
-{
-    HighPrecision hp;
-    hp.num.resize(hp1.num.size() + hp2.num.size(), 0);
-
-    for (int i = 0; i < hp1.num.size(); i++)
-    {
-        for (int j = 0; j < hp2.num.size(); j++)
-        {
-            hp.num[i + j] += hp1.num[i] * hp2.num[j];
-            hp.num[i + j + 1] += hp.num[i + j] / 10;
-            hp.num[i + j] %= 10;
-        }
-    }
-
-    // Remove leading zero if no final carry
-    while (hp.num.size() > 1 && hp.num.back() == 0)
-    {
-        hp.num.pop_back();
-    }
-
-    return hp;
-}
-
 int main()
 {
-    int t;
-    cin >> t;
-
-    while (t--)
-    {
-        int n, a;
-        cin >> n >> a;
-
-        HighPrecision result("1");
-        for (int i = 1; i <= n; i++)
-        {
-            HighPrecision hp(to_string(i));
-            result = result * hp;
-        }
-
-        int output[10];
-        memset(output, 0, sizeof(output));
-
-        for (auto c : result.getNum())
-        {
-            output[c]++;
-        }
-
-        cout << output[a] << endl;
-    }
-
+    HighPrecision hp1, hp2;
+    cin >> hp1 >> hp2;
+    cout << hp1 + hp2 << endl;
     return 0;
 }

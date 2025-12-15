@@ -1,6 +1,15 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+struct Member
+{
+    string name;
+    string position;
+    int contribution;
+    int level;
+    int original_pos;
+};
+
 // 定义职位及其对应的优先级（数字越小优先级越高）
 map<string, int> posRank = {{"BangZhu", 1},  {"FuBangZhu", 2}, {"HuFa", 3},
                             {"ZhangLao", 4}, {"TangZhu", 5},   {"JingYing", 6},
@@ -14,28 +23,16 @@ map<string, int> posLimit =
         {"BangZhong", INT_MAX}  // 帮众没有人数限制
 };
 
-// 定义帮派成员结构体
-struct Member
-{
-    string name;        // 名字
-    string position;    // 职位
-    int contribution;   // 帮贡
-    int level;          // 等级
-    int originalIndex;  // 原始顺序，用于处理等级相同的情况
-};
-
-// 按帮贡排序的比较函数
-bool compareByContribution(const Member &a, const Member &b)
+bool sortByContribution(const Member& a, const Member& b)
 {
     if (a.contribution != b.contribution)
     {
-        return a.contribution > b.contribution;  // 帮贡高的排前面
+        return a.contribution > b.contribution;
     }
-    return a.originalIndex < b.originalIndex;  // 帮贡相同时，原来靠前的排前面
+    return a.original_pos < b.original_pos;
 }
 
-// 按职位和等级排序的比较函数
-bool compareByPositionAndLevel(const Member &a, const Member &b)
+bool sortByRank(const Member& a, const Member& b)
 {
     if (posRank[a.position] != posRank[b.position])
     {
@@ -45,84 +42,74 @@ bool compareByPositionAndLevel(const Member &a, const Member &b)
     {
         return a.level > b.level;  // 等级高的排前面
     }
-    return a.originalIndex < b.originalIndex;  // 等级相同时，原来靠前的排前面
+    return a.original_pos < b.original_pos;  // 等级相同时，原来靠前的排前面
 }
 
 int main()
 {
     int n;
     cin >> n;
-
     vector<Member> members(n);
-    vector<Member> unchangeable;  // 存储帮主和副帮主
-    vector<Member> changeable;    // 存储可以调整职位的成员
+    vector<Member> retain;
+    vector<Member> change;
 
-    // 读取输入
     for (int i = 0; i < n; i++)
     {
         cin >> members[i].name >> members[i].position >>
             members[i].contribution >> members[i].level;
-        members[i].originalIndex = i;
+        members[i].original_pos = i;
 
-        // 分离帮主和副帮主
         if (members[i].position == "BangZhu" ||
             members[i].position == "FuBangZhu")
         {
-            unchangeable.push_back(members[i]);
+            retain.push_back(members[i]);
         }
         else
         {
-            changeable.push_back(members[i]);
+            change.push_back(members[i]);
         }
     }
 
-    // 按帮贡排序可调整职位的成员
-    sort(changeable.begin(), changeable.end(), compareByContribution);
+    sort(change.begin(), change.end(), sortByContribution);
 
-    // 重新分配职位
-    int huFaCount = 0, zhangLaoCount = 0, tangZhuCount = 0, jingYingCount = 0;
-
-    for (auto &member : changeable)
+    int Hufa = 0, Zhanglao = 0, Tangzhu = 0, Jingying = 0;
+    for (auto& m : change)  // Use reference to modify original
     {
-        if (huFaCount < posLimit["HuFa"])
+        if (Hufa < posLimit["HuFa"])
         {
-            member.position = "HuFa";
-            huFaCount++;
+            m.position = "HuFa";
+            Hufa++;
         }
-        else if (zhangLaoCount < posLimit["ZhangLao"])
+        else if (Zhanglao < posLimit["ZhangLao"])
         {
-            member.position = "ZhangLao";
-            zhangLaoCount++;
+            m.position = "ZhangLao";
+            Zhanglao++;
         }
-        else if (tangZhuCount < posLimit["TangZhu"])
+        else if (Tangzhu < posLimit["TangZhu"])
         {
-            member.position = "TangZhu";
-            tangZhuCount++;
+            m.position = "TangZhu";
+            Tangzhu++;
         }
-        else if (jingYingCount < posLimit["JingYing"])
+        else if (Jingying < posLimit["JingYing"])
         {
-            member.position = "JingYing";
-            jingYingCount++;
+            m.position = "JingYing";
+            Jingying++;
         }
         else
         {
-            member.position = "BangZhong";
+            m.position = "BangZhong";
         }
     }
 
-    // 合并帮主、副帮主和其他成员
-    vector<Member> result;
-    result.insert(result.end(), unchangeable.begin(), unchangeable.end());
-    result.insert(result.end(), changeable.begin(), changeable.end());
+    vector<Member> res;
+    res.insert(res.end(), retain.begin(), retain.end());
+    res.insert(res.end(), change.begin(), change.end());
 
-    // 按职位和等级排序
-    sort(result.begin(), result.end(), compareByPositionAndLevel);
+    sort(res.begin(), res.end(), sortByRank);
 
-    // 输出结果
-    for (const auto &member : result)
+    for (auto m : res)
     {
-        cout << member.name << " " << member.position << " " << member.level
-             << endl;
+        cout << m.name << " " << m.position << " " << m.level << endl;
     }
 
     return 0;

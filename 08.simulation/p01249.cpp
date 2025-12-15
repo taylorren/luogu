@@ -1,137 +1,176 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// 改进的高精度乘法函数
-string multiply(string num1, int num2) {
-    // 处理特殊情况
-    if (num1 == "0" || num2 == 0) return "0";
-    
-    int n = num1.size();
-    vector<int> result(n + 11, 0);  // 预留足够空间
-    
-    // 从低位到高位计算
-    for (int i = n - 1; i >= 0; i--) {
-        int digit = num1[i] - '0';
-        int pos = n - 1 - i;
-        int prod = digit * num2 + result[pos];
-        result[pos] = prod % 10;
-        result[pos + 1] += prod / 10;  // 处理进位
+class HighPrecision
+{
+    friend istream& operator>>(istream& is, HighPrecision& hp);
+    friend ostream& operator<<(ostream& os, const HighPrecision& hp);
+    friend HighPrecision operator+(const HighPrecision& hp1,
+                                   const HighPrecision& hp2);
+    friend HighPrecision operator*(const HighPrecision& hp1,
+                                   const HighPrecision& hp2);
+
+   private:
+    vector<int> num;
+
+   public:
+    HighPrecision() {}
+    HighPrecision(const string& s)
+    {
+        for (int i = s.size() - 1; i >= 0; i--)
+            num.push_back(s[i] - '0');
     }
-    
-    // 处理剩余的进位
-    for (int i = n; i < n + 10; i++) {
-        if (result[i] >= 10) {
-            result[i + 1] += result[i] / 10;
-            result[i] %= 10;
-        }
+    HighPrecision(int n) : HighPrecision(to_string(n)) {}
+
+    vector<int> getNum() const
+    {
+        return num;
     }
-    
-    // 构建结果字符串
-    string ans;
-    int i = n + 10;
-    // 跳过前导零
-    while (i >= 0 && result[i] == 0) i--;
-    
-    // 如果结果为0
-    if (i < 0) return "0";
-    
-    // 转换为字符串
-    while (i >= 0) {
-        ans += (result[i] + '0');
-        i--;
-    }
-    
-    return ans;
+};
+
+istream& operator>>(istream& is, HighPrecision& hp)
+{
+    string s;
+    is >> s;
+    hp = HighPrecision(s);
+    return is;
 }
 
-int main() {
+ostream& operator<<(ostream& os, const HighPrecision& hp)
+{
+    for (int i = hp.num.size() - 1; i >= 0; i--)
+        os << hp.num[i];
+    return os;
+}
+
+HighPrecision operator+(const HighPrecision& hp1, const HighPrecision& hp2)
+{
+    HighPrecision hp;
+    int maxLen = max(hp1.num.size(), hp2.num.size());
+    hp.num.resize(maxLen + 1, 0);
+
+    for (int i = 0; i < maxLen; i++)
+    {
+        int a = (i < hp1.num.size()) ? hp1.num[i] : 0;
+        int b = (i < hp2.num.size()) ? hp2.num[i] : 0;
+        hp.num[i] += a + b;
+        hp.num[i + 1] = hp.num[i] / 10;
+        hp.num[i] %= 10;
+    }
+
+    if (hp.num.back() == 0 && hp.num.size() > 1)
+    {
+        hp.num.pop_back();
+    }
+
+    return hp;
+}
+
+HighPrecision operator*(const HighPrecision& hp1, const HighPrecision& hp2)
+{
+    HighPrecision hp;
+    hp.num.resize(hp1.num.size() + hp2.num.size(), 0);
+
+    for (int i = 0; i < hp1.num.size(); i++)
+    {
+        for (int j = 0; j < hp2.num.size(); j++)
+        {
+            hp.num[i + j] += hp1.num[i] * hp2.num[j];
+            hp.num[i + j + 1] += hp.num[i + j] / 10;
+            hp.num[i + j] %= 10;
+        }
+    }
+
+    while (hp.num.size() > 1 && hp.num.back() == 0)
+    {
+        hp.num.pop_back();
+    }
+
+    return hp;
+}
+
+int main()
+{
     int n;
     cin >> n;
-    
+
     // 特殊情况处理
-    if (n <= 3) {
+    if (n <= 3)
+    {
         cout << n << endl << n << endl;
         return 0;
     }
-    
+
     vector<int> result;
-    string product = "1";  // 使用字符串存储乘积
-    
+
     // 从2开始选择连续的自然数
     int current = 2;
     int sum = 0;
-    
-    while (sum + current < n) {
+
+    while (sum + current < n)
+    {
         result.push_back(current);
         sum += current;
-        product = multiply(product, current);
         current++;
     }
-    
+
     // 计算超出的部分
     int diff = sum + current - n;
-    
-    if (diff == 0) {
+
+    if (diff == 0)
+    {
         // 刚好等于n，加入最后一个数
         result.push_back(current);
-        product = multiply(product, current);
-    } else if (diff == 1) {
+    }
+    else if (diff == 1)
+    {
         // 超出1，去掉2，将最后一个数加1
-        for (int i = 0; i < result.size(); i++) {
-            if (result[i] == 2) {
+        for (int i = 0; i < result.size(); i++)
+        {
+            if (result[i] == 2)
+            {
                 result.erase(result.begin() + i);
-                product = "1";  // 重新计算乘积
-                for (int num : result) {
-                    product = multiply(product, num);
-                }
                 break;
             }
         }
         result.push_back(current + 1);
-        product = multiply(product, current + 1);
-    } else {
-        // 超出k (k≠1)，直接去掉等于k的数
-        bool found = false;
-        for (int i = 0; i < result.size(); i++) {
-            if (result[i] == diff) {
+    }
+    else
+    {
+        // 超出diff，去掉等于diff的数，加入current
+        // 根据数学证明，diff必定在[2,3,...,k]中，所以一定能找到
+        for (int i = 0; i < result.size(); i++)
+        {
+            if (result[i] == diff)
+            {
                 result.erase(result.begin() + i);
-                product = "1";  // 重新计算乘积
-                for (int num : result) {
-                    product = multiply(product, num);
-                }
-                found = true;
                 break;
             }
         }
-        
-        if (!found) {
-            // 如果没有找到等于diff的数，需要特殊处理
-            // 这里简化处理，去掉最小的数，调整最大的数
-            result.erase(result.begin());
-            product = "1";  // 重新计算乘积
-            for (int num : result) {
-                product = multiply(product, num);
-            }
-            result.push_back(current);
-            product = multiply(product, current);
-        } else {
-            // 找到了等于diff的数，加入current
-            result.push_back(current);
-            product = multiply(product, current);
-        }
+        result.push_back(current);
     }
-    
+
     // 按从小到大排序
     sort(result.begin(), result.end());
-    
+
+    // 最后统一计算乘积
+    HighPrecision product("1");
+    for (int num : result)
+    {
+        HighPrecision hp_num(num);
+        product = product * hp_num;
+    }
+
     // 输出结果
-    for (int i = 0; i < result.size(); i++) {
+    for (int i = 0; i < result.size(); i++)
+    {
         cout << result[i];
-        if (i < result.size() - 1) {
+        if (i < result.size() - 1)
+        {
             cout << " ";
         }
     }
     cout << endl << product << endl;
-    
+
     return 0;
 }

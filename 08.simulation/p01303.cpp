@@ -20,10 +20,6 @@ class HighPrecision
         for (int i = s.size() - 1; i >= 0; i--)
             num.push_back(s[i] - '0');
     }
-    vector<int> getNum() const
-    {
-        return num;
-    }
 };
 
 istream& operator>>(istream& is, HighPrecision& hp)
@@ -113,31 +109,8 @@ HighPrecision operator*(const HighPrecision& hp1, const HighPrecision& hp2)
 
 int main()
 {
-    int t;
-    cin >> t;
-
-    while (t--)
-    {
-        int n, a;
-        cin >> n >> a;
-
-        HighPrecision result("1");
-        for (int i = 1; i <= n; i++)
-        {
-            HighPrecision hp(to_string(i));
-            result = result * hp;
-        }
-
-        int output[10];
-        memset(output, 0, sizeof(output));
-
-        for (auto c : result.getNum())
-        {
-            output[c]++;
-        }
-
-        cout << output[a] << endl;
-    }
-
+    HighPrecision hp1, hp2;
+    cin >> hp1 >> hp2;
+    cout << hp1 * hp2 << endl;
     return 0;
 }

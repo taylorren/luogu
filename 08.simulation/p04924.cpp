@@ -22,11 +22,13 @@ void rotateClockwise(int x, int y, int r)
     {
         for (int j = y - r; j <= y + r; j++)
         {
-            // 计算相对于中心的坐标
+            // 方法1：相对坐标法（当前使用）
             int dx = i - x;
             int dy = j - y;
-            // 顺时针旋转90度：(dx, dy) -> (dy, -dx)
             matrix[x + dy][y - dx] = temp[i][j];
+
+            // 方法2：绝对坐标法（等价）
+            // matrix[x + j - y][x + y - i] = temp[i][j];
         }
     }
 }
