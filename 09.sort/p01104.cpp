@@ -1,50 +1,55 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// 定义学生结构体
-struct Student {
+struct Student
+{
     string name;
-    int year, month, day;
-    int index; // 记录输入顺序，用于处理生日相同的情况
+    int y, m, d;
+    int index;
 };
 
-// 比较函数：按生日从大到小排序
-bool compareByBirthday(const Student &a, const Student &b) {
-    // 先比较年
-    if (a.year != b.year) {
-        return a.year < b.year; // 年份小的年龄大
+bool cmp(const Student& a, const Student& b)
+{
+    if (a.y != b.y)
+    {
+        return a.y < b.y;
     }
-    // 年相同，比较月
-    if (a.month != b.month) {
-        return a.month < b.month; // 月份小的年龄大
+    if (a.m != b.m)
+    {
+        return a.m < b.m;
     }
-    // 年月相同，比较日
-    if (a.day != b.day) {
-        return a.day < b.day; // 日期小的年龄大
+    if (a.d != b.d)
+    {
+        return a.d < b.d;
     }
-    // 生日完全相同，按输入顺序的逆序排列
-    return a.index > b.index; // 输入靠后的先输出
+
+    return a.index > b.index;
 }
 
-int main() {
+int main()
+{
+    // freopen("P1104_6.in", "r", stdin);
+    // freopen("P1104_6.out", "w", stdout);
     int n;
     cin >> n;
-    
+
     vector<Student> students(n);
-    
-    // 读取输入
-    for (int i = 0; i < n; i++) {
-        cin >> students[i].name >> students[i].year >> students[i].month >> students[i].day;
-        students[i].index = i; // 记录输入顺序
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> students[i].name;
+        cin >> students[i].y;
+        cin >> students[i].m;
+        cin >> students[i].d;
+        students[i].index = i;
     }
-    
-    // 按生日从大到小排序
-    sort(students.begin(), students.end(), compareByBirthday);
-    
-    // 输出结果
-    for (const auto &student : students) {
-        cout << student.name << endl;
+
+    sort(students.begin(), students.end(), cmp);
+
+    for (auto s : students)
+    {
+        cout << s.name << endl;
     }
-    
+
     return 0;
 }

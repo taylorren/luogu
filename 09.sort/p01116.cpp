@@ -1,60 +1,47 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-// 计算逆序对数量的函数
-long long countInversions(vector<int>& arr, vector<int>& temp, int left,
-                          int right)
+long long doReverse(vector<int>& trains, vector<int>& tmp, int left, int right)
 {
-    // 基本情况：只有一个元素时没有逆序对
     if (left >= right)
+    {
         return 0;
+    }
 
-    // 分治：将数组分成两半
-    int mid = left + (right - left) / 2;
+    int mid = (left + right) / 2;
+    long long counts = doReverse(trains, tmp, left, mid) +
+                       doReverse(trains, tmp, mid + 1, right);
 
-    // 递归计算左半部分和右半部分的逆序对
-    long long inversions = countInversions(arr, temp, left, mid) +
-                           countInversions(arr, temp, mid + 1, right);
-
-    // 合并两个已排序的子数组，并计算跨越中点的逆序对
-    int i = left;     // 左半部分的起始索引
-    int j = mid + 1;  // 右半部分的起始索引
-    int k = left;     // 临时数组的起始索引
-
+    int i = left, j = mid + 1, k = left;  // 三个指针
     while (i <= mid && j <= right)
     {
-        if (arr[i] <= arr[j])
+        if (trains[i] <= trains[j])  // 不是逆序
         {
-            temp[k++] = arr[i++];
+            tmp[k++] = trains[i++];
         }
-        else
+        else  // 出现逆序对，所以需要调整一次
         {
-            // 当右半部分的元素小于左半部分的元素时，形成逆序对
-            // 左半部分从i到mid的所有元素都与arr[j]形成逆序对
-            temp[k++] = arr[j++];
-            inversions += (mid - i + 1);
+            tmp[k++] = trains[j++];
+            counts += (mid - i + 1);  // 核心的观察
         }
     }
 
-    // 复制剩余元素
+    // 左右剩余元素的复制
     while (i <= mid)
     {
-        temp[k++] = arr[i++];
+        tmp[k++] = trains[i++];
     }
-
     while (j <= right)
     {
-        temp[k++] = arr[j++];
+        tmp[k++] = trains[j++];
     }
-
-    // 将临时数组中的元素复制回原数组
-    for (i = left; i <= right; i++)
+    // 复制回原来的数组
+    for (int index = left; index <= right; index++)
     {
-        arr[i] = temp[i];
+        trains[index] = tmp[index];
     }
 
-    return inversions;
+    return counts;
 }
 
 int main()
@@ -62,16 +49,17 @@ int main()
     int n;
     cin >> n;
 
-    vector<int> train(n);
+    vector<int> trains(n);
     for (int i = 0; i < n; i++)
     {
-        cin >> train[i];
+        cin >> trains[i];
     }
 
-    vector<int> temp(n);
-    long long rotations = countInversions(train, temp, 0, n - 1);
+    vector<int> tmp(n);
+    // Above for initialization
 
-    cout << rotations << endl;
+    long long reverse = doReverse(trains, tmp, 0, n - 1);
+    cout << reverse << endl;
 
     return 0;
 }

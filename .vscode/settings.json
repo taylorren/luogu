@@ -185,4 +185,14 @@
       "comment": "clang-format"
     }
   ]
+,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "modificationsIfAvailable",
+  "[cpp]": {
+    "editor.defaultFormatter": "ebextensions.clang-format-2025"
+  },
+  "[c]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
+  "clangd.path": "clangd"
 }
