@@ -1,61 +1,76 @@
-#include <cmath>
-#include <iostream>
-#include <vector>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-// Function to check if a number is prime
-bool isPrime(int num) {
-  if (num <= 1)
-    return false;
-  if (num == 2)
-    return true;
-  if (num % 2 == 0)
-    return false;
-  for (int i = 3; i <= sqrt(num); i += 2) {
-    if (num % i == 0)
-      return false;
-  }
-  return true;
-}
-
-// Function to count the number of 1s in the binary representation of a number
-int countOnes(int num) {
-  int count = 0;
-  while (num) {
-    num &= (num - 1);
-    count++;
-  }
-  return count;
-}
-
-int main() {
-  int n, k;
-  cin >> n >> k;
-  vector<int> nums(n);
-  for (int i = 0; i < n; i++) {
-    cin >> nums[i];
-  }
-
-  int count = 0;
-  int total_combinations = 1 << n; // 2^n combinations
-
-  for (int mask = 0; mask < total_combinations; mask++) {
-    if (countOnes(mask) == k) // 有k个1，表示取了k个数字
+// Returns true is n is a prime
+bool isPrime(int n)
+{
+    if (n <= 1)
     {
-      int sum = 0;
-      for (int i = 0; i < n; i++) {
-        if (mask & (1 << i)) {
-          sum += nums[i];
-        }
-      }
-      if (isPrime(sum)) {
-        count++;
-      }
+        return false;
     }
-  }
+    if (n == 2)
+    {
+        return true;
+    }
 
-  cout << count << endl;
+    for (int i = 2; i * i <= n; i++)
+    {
+        if (n % i == 0)
+        {
+            return false;
+        }
+    }
 
-  return 0;
+    return true;
+}
+
+// Count how many 1s in n's binary representation
+int countOne(int n)
+{
+    int count = 0;
+    while (n > 0)
+    {
+        if (n % 2 == 1)
+        {
+            count++;
+        }
+        n /= 2;
+    }
+    return count;
+}
+
+int main()
+{
+    int n, k;
+    cin>>n>>k;
+
+    vector<int> x(n);
+    for(int i=0;i<n;i++)
+    {
+        cin>>x[i];
+    }
+
+    long long count=0;
+    long long total=1<<n; // total variations
+
+    for(int current=0;current<total;current++)
+    {
+        if(countOne(current)==k) // This number has k elements selected
+        {
+            int sum=0;
+            for(int mask=0;mask<n;mask++)
+            {
+                if(current & (1<<mask))
+                {
+                    sum+=x[mask];
+                }
+            }
+            if(isPrime(sum))
+            {
+                count++;
+            }
+        }
+    }
+
+    cout<<count<<endl;
 }
