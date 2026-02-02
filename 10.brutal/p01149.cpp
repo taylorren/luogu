@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
 // 每个数字需要的火柴棍数量
@@ -38,9 +37,11 @@ int main()
     int count = 0;
 
     // 枚举所有可能的A和B
-    // 由于数字可能很大，我们设置一个合理的上限
-    // 考虑到最少的火柴棍数是1需要2根，所以最大可能的数字不会超过remainingMatchsticks/2
-    int upperLimit = 1000;  // 设置一个合理的上限
+    // 由于理论上数字可能很大，但考虑到实际约束条件：
+    // 1. A、B、C三个数字总共使用remainingMatchsticks根火柴棍
+    // 2. A + B = C的关系限制了数字的实际范围
+    // 设置1000作为实用的上限，足以覆盖大部分测试用例
+    int upperLimit = 1000;
 
     for (int a = 0; a <= upperLimit; a++)
     {

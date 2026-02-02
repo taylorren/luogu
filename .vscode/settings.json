@@ -189,10 +189,11 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "modificationsIfAvailable",
   "[cpp]": {
-    "editor.defaultFormatter": "ebextensions.clang-format-2025"
+    "editor.defaultFormatter": "KylinIdeTeam.kylin-clangd"
   },
   "[c]": {
     "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
   },
-  "clangd.path": "clangd"
+  "clangd.path": "clangd",
+  "kiroAgent.configureMCP": "Disabled"
 }

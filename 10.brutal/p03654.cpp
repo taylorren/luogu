@@ -1,14 +1,94 @@
-#include <iostream>
-#include <vector>
-#include <string>
+#include <bits/stdc++.h>
 using namespace std;
+
+const char B = '#';
+int countTotalEmptyCells(vector<vector<char>> court, int R, int C)
+{
+    int c = 0;
+    for (int i = 0; i < R; i++)
+    {
+        for (int j = 0; j < C; j++)
+        {
+            if (court[i][j] != B)
+            {
+                c++;
+            }
+        }
+    }
+
+    return c;
+}
+
+int countRowPlace(vector<vector<char>> court, int R, int C, int K)
+{
+    int c = 0;
+    for (int i = 0; i < R; i++)
+    {
+        // Count blocked cells in first window
+        int blocked = 0;
+        for (int k = 0; k < K; k++)
+        {
+            if (court[i][k] == B)
+                blocked++;
+        }
+        if (blocked == 0)
+            c++;
+
+        // Slide the window
+        for (int j = K; j < C; j++)
+        {
+            // Remove leftmost cell from window
+            if (court[i][j - K] == B)
+                blocked--;
+            // Add new rightmost cell to window
+            if (court[i][j] == B)
+                blocked++;
+
+            if (blocked == 0)
+                c++;
+        }
+    }
+
+    return c;
+}
+
+int countColPlace(vector<vector<char>> court, int R, int C, int K)
+{
+    int c = 0;
+    for (int j = 0; j < C; j++)
+    {
+        // Count blocked cells in first window
+        int blocked = 0;
+        for (int k = 0; k < K; k++)
+        {
+            if (court[k][j] == B)
+                blocked++;
+        }
+        if (blocked == 0)
+            c++;
+
+        // Slide the window
+        for (int i = K; i < R; i++)
+        {
+            // Remove topmost cell from window
+            if (court[i - K][j] == B)
+                blocked--;
+            // Add new bottom cell to window
+            if (court[i][j] == B)
+                blocked++;
+
+            if (blocked == 0)
+                c++;
+        }
+    }
+
+    return c;
+}
 
 int main()
 {
     int R, C, K;
     cin >> R >> C >> K;
-
-    // 读取篮球场布局
     vector<vector<char>> court(R, vector<char>(C));
     for (int i = 0; i < R; i++)
     {
@@ -20,68 +100,18 @@ int main()
         }
     }
 
-    int total_ways = 0;
+    int result = 0;
 
-    // 特殊处理 K=1 的情况
     if (K == 1)
     {
-        // 只需计算所有空地的数量
-        for (int i = 0; i < R; i++)
-        {
-            for (int j = 0; j < C; j++)
-            {
-                if (court[i][j] == '.')
-                {
-                    total_ways++;
-                }
-            }
-        }
+        result = countTotalEmptyCells(court, R, C);
     }
     else
     {
-        // 检查每一行中可能的站位方式
-        for (int i = 0; i < R; i++)
-        {
-            for (int j = 0; j <= C - K; j++)
-            {
-                bool valid = true;
-                for (int k = 0; k < K; k++)
-                {
-                    if (court[i][j + k] == '#')
-                    {
-                        valid = false;
-                        break;
-                    }
-                }
-                if (valid)
-                {
-                    total_ways++;
-                }
-            }
-        }
-
-        // 检查每一列中可能的站位方式
-        for (int j = 0; j < C; j++)
-        {
-            for (int i = 0; i <= R - K; i++)
-            {
-                bool valid = true;
-                for (int k = 0; k < K; k++)
-                {
-                    if (court[i + k][j] == '#')
-                    {
-                        valid = false;
-                        break;
-                    }
-                }
-                if (valid)
-                {
-                    total_ways++;
-                }
-            }
-        }
+        result = countRowPlace(court, R, C, K) + countColPlace(court, R, C, K);
     }
 
-    cout << total_ways << endl;
+    cout << result << endl;
+
     return 0;
 }
