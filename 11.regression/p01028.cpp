@@ -1,45 +1,33 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-// 记忆化搜索数组
-vector<long long> memo;
+vector<long long> calculated;
 
-// 计算以last为最后一个元素的合法数列的数量
-long long count(int last)
+long long do_calc(int n)
 {
-    // 如果已经计算过，直接返回结果
-    if (memo[last] != -1)
+    if (calculated[n] != -1)  // Already calculated
     {
-        return memo[last];
+        return calculated[n];
     }
 
-    // 初始化结果为1（表示只有last这一个元素的数列）
-    long long result = 1;
+    long long res = 1;
 
-    // 尝试在数列末尾添加1到⌊last/2⌋的任意整数
-    for (int i = 1; i <= last / 2; i++)
+    for (int i = 1; i <= n / 2; i++)
     {
-        result += count(i);
+        res += do_calc(i);
     }
 
-    // 记忆化存储结果
-    memo[last] = result;
-    return result;
+    calculated[n] = res;
+    return res;
 }
-
 int main()
 {
     int n;
     cin >> n;
 
-    // 初始化记忆化数组
-    memo.resize(n + 1, -1);
+    calculated.resize(n + 1, -1);  // Init to all -1
+    long long res=do_calc(n);
 
-    // 计算结果
-    long long answer = count(n);
-
-    cout << answer << endl;
-
+    cout<<res<<endl;
     return 0;
 }
