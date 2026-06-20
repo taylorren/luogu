@@ -1,6 +1,6 @@
 {
-  "C_Cpp_Runner.cCompilerPath": "gcc",
-  "C_Cpp_Runner.cppCompilerPath": "g++",
+  "C_Cpp_Runner.cCompilerPath": "gcc-16",
+  "C_Cpp_Runner.cppCompilerPath": "g++-16",
   "C_Cpp_Runner.debuggerPath": "gdb",
   "C_Cpp_Runner.cStandard": "",
   "C_Cpp_Runner.cppStandard": "",
@@ -195,5 +195,11 @@
     "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
   },
   "clangd.path": "clangd",
-  "kiroAgent.configureMCP": "Disabled"
+  "kiroAgent.configureMCP": "Disabled",
+  "C_Cpp.default.compilerPath": "g++-16",
+  "C_Cpp.default.cppStandard": "c++17",
+  "C_Cpp.default.intelliSenseMode": "macos-gcc-x64",
+  "code-runner.executorMap": {
+    "cpp": "cd $dir && g++-16 -std=c++17 -O2 -Wall -Wextra -o $fileNameWithoutExt $fileName && ./$fileNameWithoutExt"
+  }
 }

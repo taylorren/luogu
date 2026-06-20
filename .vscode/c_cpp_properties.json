@@ -1,17 +1,14 @@
 {
   "configurations": [
     {
-      "name": "linux-gcc-x64",
+      "name": "mac-gpp16",
       "includePath": [
         "${workspaceFolder}/**"
       ],
-      "compilerPath": "/usr/bin/gcc",
-      "cStandard": "${default}",
-      "cppStandard": "${default}",
-      "intelliSenseMode": "linux-gcc-x64",
-      "compilerArgs": [
-        ""
-      ]
+      "compilerPath": "g++-16",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "macos-gcc-x64"
     }
   ],
   "version": 4
