@@ -1,15 +1,15 @@
 #include <iostream>
 using namespace std;
 
-const int MAXN = 20;
+const int MAXN = 21;
 int n;
 int ans[MAXN];  // 存储每行皇后的列位置
-int count = 0;  // 解的总数
+int solution_count = 0;  // 解的总数
 
 void print_solution()
 {
-    count++;
-    if (count <= 3)
+    solution_count++;
+    if (solution_count <= 3)
     {
         for (int i = 1; i <= n; i++)
         {                           // 修改循环范围
@@ -53,6 +53,6 @@ int main()
 {
     cin >> n;
     solve(1);  // 从1开始
-    cout << count << endl;
+    cout << solution_count << endl;
     return 0;
 }
