@@ -1,17 +1,20 @@
-#include <cmath>
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-bool isPrime(int num)
+int n, k, nums[20];
+int prime_count = 0;
+
+bool is_prime(int num)
 {
-    if (num <= 1)
-        return false;
     if (num == 2)
+    {
         return true;
-    if (num % 2 == 0)
+    }
+    if (num <= 1 || num % 2 == 0)
+    {
         return false;
-    for (int i = 3; i <= sqrt(num); i += 2)
+    }
+    for (int i = 3; i * i <= num; i += 2)
     {
         if (num % i == 0)
             return false;
@@ -19,46 +22,31 @@ bool isPrime(int num)
     return true;
 }
 
-int n, k;
-vector<int> nums;
-int count = 0;
-
-void dfs(int pos, int selected, int sum)
+void dfs(int pos, int selected_count, int sum)
 {
-    // 已经选择了k个数
-    if (selected == k)
+    if (selected_count == k)
     {
-        if (isPrime(sum))
+        if (is_prime(sum))
         {
-            count++;
+            prime_count++;
         }
         return;
     }
-
-    // 剩余的数不够凑齐k个
-    if (n - pos < k - selected)
-        return;
-
-    // 选择当前位置的数
-    if (pos < n)
+    if (n - pos < k - selected_count)
     {
-        dfs(pos + 1, selected + 1, sum + nums[pos]);
-        // 不选择当前位置的数
-        dfs(pos + 1, selected, sum);
+        return;
     }
+    dfs(pos + 1, selected_count, sum);
+    dfs(pos + 1, selected_count + 1, sum + nums[pos]);
 }
 
 int main()
 {
     cin >> n >> k;
-    nums.resize(n);
     for (int i = 0; i < n; i++)
     {
         cin >> nums[i];
     }
-
     dfs(0, 0, 0);
-    cout << count << endl;
-
-    return 0;
+    cout << prime_count;
 }

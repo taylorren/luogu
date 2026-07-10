@@ -189,7 +189,7 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "modificationsIfAvailable",
   "[cpp]": {
-    "editor.defaultFormatter": "KylinIdeTeam.kylin-clangd"
+    "editor.defaultFormatter": "ms-vscode.cpptools"
   },
   "[c]": {
     "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
