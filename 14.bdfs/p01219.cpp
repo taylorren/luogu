@@ -30,7 +30,7 @@ bool check(int row, int col)
     return true;
 }
 
-void solve(int row)
+void dfs(int row)
 {
     if (row > n)
     {  // 修改终止条件
@@ -43,7 +43,7 @@ void solve(int row)
         if (check(row, i))
         {
             ans[row] = i;
-            solve(row + 1);
+            dfs(row + 1);
             ans[row] = 0;  // 回溯
         }
     }
@@ -52,7 +52,7 @@ void solve(int row)
 int main()
 {
     cin >> n;
-    solve(1);  // 从1开始
+    dfs(1);  // 从1开始
     cout << solution_count << endl;
     return 0;
 }
