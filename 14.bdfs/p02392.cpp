@@ -1,58 +1,48 @@
-#include <algorithm>
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-const int MAXN = 25;
-int s[5];            // 每科题目数量
-int times[5][MAXN];  // 每科每道题的时间
-int total = 0;       // 总时间
+const int N = 4 + 1;
+int exercises_in_subject[N];
+int exercises_time[N][21];  // max 20 exercises per subject
 
-// DFS函数：当前处理到第idx题，左右大脑已用时间
-void dfs(int subject_id, int idx, int left, int right, int& min_time)
+void dfs(int subject, int exercise, int left, int right, int &total_time)
 {
-    if (idx > s[subject_id])
+    if (exercise > exercises_in_subject[subject])
     {
-        min_time = min(min_time, max(left, right));
+        total_time = min(total_time, max(left, right));
         return;
     }
-
-    // 分配给左边
-    dfs(subject_id, idx + 1, left + times[subject_id][idx], right, min_time);
-    // 分配给右边
-    dfs(subject_id, idx + 1, left, right + times[subject_id][idx], min_time);
+    dfs(subject, exercise + 1, left + exercises_time[subject][exercise], right,
+        total_time);  // 左脑练习
+    dfs(subject, exercise + 1, left, right + exercises_time[subject][exercise],
+        total_time);  // 右脑练习
 }
 
-// 计算单科最短时间
-int solve_subject(int subject_id)
+int solve(int subject)
 {
-    int min_time = 1e9;  // 记录最小时间
-    dfs(subject_id, 1, 0, 0, min_time);
+    int min_time = 1e9;
+    dfs(subject, 1, 0, 0, min_time);
     return min_time;
 }
-
 int main()
 {
-    // 读入每科题目数量
-    for (int i = 1; i <= 4; i++)
+    for (int i = 1; i <= N - 1; i++)
     {
-        cin >> s[i];
+        cin >> exercises_in_subject[i];
     }
-
-    // 读入每科每道题的时间
-    for (int i = 1; i <= 4; i++)
+    for (int i = 1; i <= N - 1; i++)
     {
-        for (int j = 1; j <= s[i]; j++)
+        for (int j = 1; j <= exercises_in_subject[i]; j++)
         {
-            cin >> times[i][j];
+            cin >> exercises_time[i][j];
         }
     }
 
-    // 计算每科所需时间并累加
-    for (int i = 1; i <= 4; i++)
+    int total = 0;
+    for (int i = 1; i <= N - 1; i++)
     {
-        total += solve_subject(i);
+        total += solve(i);
     }
 
     cout << total << endl;
-    return 0;
 }

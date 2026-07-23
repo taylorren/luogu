@@ -22,28 +22,26 @@ bool valid(int x, int y)
     return x >= 0 && y >= 0;
 }
 
-void bfs()
+int bfs()
 {
     memset(dist, -1, sizeof(dist));
     queue<Point> q;
 
-    // 从原点开始
     q.push(Point(0, 0, 0));
     dist[0][0] = 0;
 
+    int ans = -1;
     while (!q.empty())
     {
         Point cur = q.front();
         q.pop();
 
-        // 如果当前点永不被摧毁，找到安全点
         if (destroyed[cur.x][cur.y] == INF)
         {
-            cout << cur.t << endl;
-            return;
+            ans = cur.t;
+            break;
         }
 
-        // 尝试四个方向
         for (int i = 0; i < 4; i++)
         {
             int nx = cur.x + dx[i];
@@ -58,7 +56,20 @@ void bfs()
         }
     }
 
-    cout << -1 << endl;  // 无法到达安全点
+    return ans;
+}
+
+void update_destroyed(int x, int y, int t)
+{
+    if (valid(x, y))
+        destroyed[x][y] = min(destroyed[x][y], t);
+    for (int i = 0; i < 4; i++)
+    {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        if (valid(nx, ny))
+            destroyed[nx][ny] = min(destroyed[nx][ny], t);
+    }
 }
 
 int main()
@@ -67,30 +78,14 @@ int main()
     memset(destroyed, INF, sizeof(destroyed));
 
     cin >> m;
-    // 读入每颗流星的信息
     for (int i = 0; i < m; i++)
     {
         int x, y, t;
         cin >> x >> y >> t;
-
-        // 更新流星落点本身
-        if (valid(x, y))
-        {
-            destroyed[x][y] = min(destroyed[x][y], t);
-        }
-
-        // 更新四个相邻格子
-        for (int j = 0; j < 4; j++)
-        {
-            int nx = x + dx[j];
-            int ny = y + dy[j];
-            if (valid(nx, ny))
-            {
-                destroyed[nx][ny] = min(destroyed[nx][ny], t);
-            }
-        }
+        update_destroyed(x, y, t);
     }
 
-    bfs();
+    int ans = bfs();
+    cout << ans << endl;
     return 0;
 }

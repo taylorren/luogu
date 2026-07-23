@@ -1,58 +1,60 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-const int MAXN = 21;
+const int GRID=13+1;
 int n;
-int ans[MAXN];  // 存储每行皇后的列位置
-int solution_count = 0;  // 解的总数
+int col_place[GRID]; // col placing for one queen a row
+int print_count=0;
 
 void print_solution()
 {
-    solution_count++;
-    if (solution_count <= 3)
+    if(print_count>=4)
     {
-        for (int i = 1; i <= n; i++)
-        {                           // 修改循环范围
-            cout << ans[i] << " ";  // 不需要+1，因为我们直接存储1-based的值
-        }
-        cout << endl;
+        return;
     }
+    for(int i=1;i<=n;i++)
+    {
+        cout<<col_place[i]<<" ";
+    }
+    cout<<endl;
 }
 
-bool check(int row, int col)
+bool can_place(int row, int col)
 {
-    for (int i = 1; i < row; i++)
+    for(int i=1;i<row;i++)
     {
-        if (ans[i] == col ||                    // 同列
-            abs(row - i) == abs(col - ans[i]))  // 对角线
+        if(col_place[i]==col || abs(col_place[i]-col)==abs(i-row))
             return false;
     }
     return true;
 }
-
-void dfs(int row)
+bool dfs(int row)
 {
-    if (row > n)
-    {  // 修改终止条件
+    if(row>n)
+    {
+        print_count++;
         print_solution();
-        return;
+        return true;
     }
 
-    for (int i = 1; i <= n; i++)
+    for(int i=1;i<=n;i++)
     {
-        if (check(row, i))
+        if(can_place(row, i))
         {
-            ans[row] = i;
-            dfs(row + 1);
-            ans[row] = 0;  // 回溯
+            col_place[row]=i;
+            dfs(row+1);
+            col_place[row]=0;
         }
     }
+    return true;
 }
+
 
 int main()
 {
-    cin >> n;
-    dfs(1);  // 从1开始
-    cout << solution_count << endl;
-    return 0;
+    cin>>n;
+
+    dfs(1);
+    cout<<print_count<<endl;
+
 }

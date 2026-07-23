@@ -27,6 +27,10 @@ void bfs()
         if (up <= n && dist[up] == -1)
         {
             dist[up] = dist[cur] + 1;
+            if(up == b)  // 如果到达目标层，直接返回
+            {
+                return;
+            }
             q.push(up);
         }
 
@@ -35,6 +39,10 @@ void bfs()
         if (down >= 1 && dist[down] == -1)
         {
             dist[down] = dist[cur] + 1;
+            if(down == b)  // 如果到达目标层，直接返回
+            {
+                return;
+            }
             q.push(down);
         }
     }
